@@ -1,0 +1,96 @@
+{
+  "case_id": "SC/142/2024",
+  "court": "Court of the Principal District and Sessions Judge, Rangareddy at L.B. Nagar, Telangana",
+  "judge": "Sri P. Sudhakar, Principal District and Sessions Judge",
+  "prosecution": "Public Prosecutor for the State of Telangana",
+  "hearing_date": "2024-11-15",
+  "current_stage": "pre_trial",
+  "fir_number": "342/2024",
+  "fir_station": "Gachibowli PS, Cyberabad Police Commissionerate",
+  "fir_date": "2024-08-13",
+  "fir_time": "02:15 hrs",
+  "fir_complainant": "Rajesh Sharma, S/o V.K. Sharma, aged 29 years, Software Engineer, r/o Gowlidoddy, Hyderabad",
+  "fir_content": "On 12-08-2024 at about 23:30 hrs, while the complainant was walking home from Wipro Circle towards Gowlidoddy, two unidentified persons on a black motorcycle intercepted him. The pillion rider wielded an iron rod, threatened to kill him, pushed him to the ground causing abrasion on his right forearm, and forcibly snatched his OnePlus 12 mobile phone (worth Rs. 65,000) and a gold finger ring (weighing 8 grams). The assailants then sped away towards Financial District.",
+  "chargesheet_date": "2024-10-04",
+  "chargesheet_content": "Investigation revealed that Accused A-1 (Mohd. Farhan) was rider and A-2 (absconding) was pillion. A-1 was arrested on 20-08-2024. Pursuant to admissible disclosure under Section 23 BSA proviso, A-1 led police to a public bush near Botanical Garden road where the complainant's mobile phone was recovered under panchnama. Complainant subsequently identified A-1 in TIP conducted at Cherlapally Prison.",
+  "charges": [
+    "BNS §309(4) (Robbery)",
+    "BNS §311 (Robbery with attempt to cause death or grievous hurt / using deadly weapon)",
+    "BNS §3(5) (Joint liability / common intention)"
+  ],
+  "accused": {
+    "name": "Mohd. Farhan",
+    "age": 22,
+    "address": "H.No. 4-82, Hafeezpet, Serilingampally, Cyberabad, Hyderabad",
+    "bail_status": "in_custody",
+    "prior_convictions": [],
+    "alibi_description": "At 23:25 hrs on 12-08-2024, the accused was completing a food delivery order (Order #SW-99214) at Waverock Building, Financial District, as verified by digital delivery timestamp logs and customer OTP verification.",
+    "is_first_time_offender": true
+  },
+  "witnesses": [
+    {
+      "witness_id": "PW1",
+      "name": "Rajesh Sharma",
+      "witness_type": "complainant",
+      "statement_s180": "I was walking on the side road near Wipro Circle. It was dark as streetlights were flickering. A bike stopped. The pillion rider held an iron rod. The bike rider was wearing a full helmet. I was terrified and fell down. The pillion took my phone and ring. I could not clearly see the rider's face during the incident, but I later identified A-1 in prison."
+    },
+    {
+      "witness_id": "PW2",
+      "name": "K. Venkat Rao",
+      "witness_type": "panch",
+      "statement_s180": "I am an auto driver near Gachibowli junction. Police called me on 21-08-2024 at 16:00 hrs. A-1 led the police party and me to an open bushy patch beside the main Botanical Garden road. A-1 pointed out a phone hidden under dry leaves. Police prepared panchnama and I signed it."
+    },
+    {
+      "witness_id": "PW3",
+      "name": "S. Ramesh",
+      "witness_type": "IO",
+      "statement_s180": "I am the Sub-Inspector of Police, Gachibowli PS. I registered FIR No. 342/2024, visited the scene of offence, prepared rough sketch. On credible information, apprehended A-1 on 20-08-2024. Recorded voluntary disclosure under Section 23 BSA. Recovered the stolen mobile phone. Obtained CCTV footage from Gachibowli signal junction. Submitted chargesheet under Sections 309(4) and 311 BNS."
+    },
+    {
+      "witness_id": "PW4",
+      "name": "Sri M. Anand Kumar",
+      "witness_type": "TIP_magistrate",
+      "statement_s180": "I am the II Metropolitan Magistrate, Cyberabad. On requisition from IO, I conducted Test Identification Parade of A-1 at Central Prison, Cherlapally on 08-09-2024. Complainant PW1 identified A-1. Report marked as Ex.P-4."
+    }
+  ],
+  "evidence": {
+    "recovered_property": [
+      {
+        "exhibit_id": "M.O.1",
+        "description": "OnePlus 12 5G smartphone, Flowy Emerald color, IMEI 864501062391024",
+        "recovery_location": "Open bushy area on Botanical Garden road",
+        "estimated_value": 65000
+      }
+    ],
+    "tip_report": {
+      "conducted": true,
+      "conducted_by": "Sri M. Anand Kumar, II MM Cyberabad",
+      "date": "2024-09-08",
+      "identified_by": ["PW1"],
+      "dummy_match": false,
+      "witnesses_isolated": false,
+      "prior_exposure": true,
+      "delay_days": 19
+    },
+    "recovery_mahazar": {
+      "conducted": true,
+      "location": "Open bushy patch beside main Botanical Garden Road, Cyberabad",
+      "location_type": "open",
+      "panch_witnesses": ["K. Venkat Rao", "B. Narsing Rao"],
+      "stock_witnesses": true,
+      "property_tip_in_court": false,
+      "recovery_date": "2024-08-21",
+      "incident_date": "2024-08-12",
+      "signed_at_police_station": true
+    },
+    "electronic": {
+      "cctv_present": true,
+      "cctv_s63_certificate": false,
+      "cctv_hash_value": null,
+      "cctv_description": "Traffic junction camera footage showing two individuals on motorcycle at 23:28 hrs",
+      "cdr_present": true,
+      "cdr_s63_certificate": false,
+      "cdr_tower_location": "Waverock Tower, Financial District at 23:25 hrs"
+    }
+  }
+}

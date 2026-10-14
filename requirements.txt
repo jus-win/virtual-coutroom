@@ -1,0 +1,12 @@
+# Virtual Courtroom — Defendant Agent Dependencies
+# Supports both Google Gemini and OpenAI backends
+
+# LLM Providers (install at least one)
+google-generativeai>=0.7.0          # Google Gemini (default)
+openai>=1.0.0                       # OpenAI GPT-4o (optional)
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# Rich terminal output for CLI runner
+rich>=13.0.0

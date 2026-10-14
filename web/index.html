@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Courtroom — Defendant AI Agent (Telangana Sessions Court)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.05);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.2);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur px-6 py-3.5 flex items-center justify-between sticky top-0 z-20">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-xl shadow-inner">
+        ⚖️
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-bold tracking-tight text-white">Court of Principal District & Sessions Judge</h1>
+          <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium">Rangareddy, Telangana</span>
+        </div>
+        <p class="text-xs text-slate-400">Sessions Case No. <span class="font-semibold text-slate-200">SC/142/2024</span> &bull; State of Telangana v. Mohd. Farhan &bull; BNS 2023</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Defendant Agent: <strong class="text-emerald-400">Active</strong></span>
+      </div>
+      <button onclick="refreshData()" class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-200 transition" title="Refresh state">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Trial Stage Navigation Bar -->
+  <div class="bg-slate-950 border-b border-slate-800/80 px-6 py-2 overflow-x-auto">
+    <div class="flex items-center gap-2 min-w-max text-xs">
+      <span class="text-slate-400 font-medium mr-2">Trial Stage:</span>
+      <button onclick="setStage('bail_hearing')" id="btn-bail_hearing" class="stage-btn px-3 py-1.5 rounded-md font-medium transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">1. Bail Hearing (§480 BNSS)</button>
+      <button onclick="setStage('discharge_application')" id="btn-discharge_application" class="stage-btn px-3 py-1.5 rounded-md font-medium transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">2. Discharge (§250 BNSS)</button>
+      <button onclick="setStage('charge_framing')" id="btn-charge_framing" class="stage-btn px-3 py-1.5 rounded-md font-medium transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">3. Charges (§251 BNSS)</button>
+      <button onclick="setStage('prosecution_evidence')" id="btn-prosecution_evidence" class="stage-btn px-3 py-1.5 rounded-md font-medium transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">4. Evidence & Cross-Exam (§254 BNSS)</button>
+      <button onclick="setStage('final_arguments')" id="btn-final_arguments" class="stage-btn px-3 py-1.5 rounded-md font-medium transition bg-slate-800/80 text-slate-300 hover:bg-slate-700">5. Final Arguments (§257 BNSS)</button>
+    </div>
+  </div>
+
+  <!-- Main Split Layout -->
+  <div class="flex-1 grid grid-cols-12 gap-0 overflow-hidden">
+
+    <!-- Left Sidebar: Case Dossier & Legal Strategy (4 cols) -->
+    <aside class="col-span-12 lg:col-span-4 border-r border-slate-800 bg-slate-950/40 p-5 overflow-y-auto custom-scroll space-y-5">
+
+      <!-- Accused Summary Card -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <div class="flex items-start justify-between">
+          <div>
+            <span class="text-[11px] font-semibold tracking-wider text-amber-400 uppercase">Accused A-1</span>
+            <h3 class="text-sm font-bold text-white mt-0.5">Mohd. Farhan (Age: 22)</h3>
+            <p class="text-xs text-slate-400">Delivery Executive &bull; Hafeezpet, Cyberabad</p>
+          </div>
+          <span class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-medium">In Custody</span>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span class="text-slate-400 block text-[11px]">First-Time Offender</span>
+            <span class="text-emerald-400 font-medium">Yes (§479 BNSS)</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">Weapon Recovered</span>
+            <span class="text-slate-300 font-medium">None from A-1</span>
+          </div>
+        </div>
+        <div class="mt-2.5 bg-slate-950/60 rounded p-2 text-xs border border-slate-800/80">
+          <span class="text-amber-400/90 font-medium block text-[11px]">Verified Alibi (§9 BSA):</span>
+          <span class="text-slate-300 text-[11px] leading-relaxed">Swiggy delivery OTP completed at Waverock, Financial District at 23:25 hrs (3.5 km away).</span>
+        </div>
+      </div>
+
+      <!-- Charges Framed -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <h4 class="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">Prosecution Charges Framed</h4>
+        <div class="space-y-1.5 text-xs">
+          <div class="bg-slate-950/60 border border-slate-800 rounded px-2.5 py-1.5 flex items-center justify-between">
+            <span class="font-medium text-slate-200">BNS §309(4)</span>
+            <span class="text-slate-400 text-[11px]">Robbery (Up to 10 yrs)</span>
+          </div>
+          <div class="bg-slate-950/60 border border-slate-800 rounded px-2.5 py-1.5 flex items-center justify-between">
+            <span class="font-medium text-rose-300">BNS §311</span>
+            <span class="text-rose-400 text-[11px]">Deadly weapon (7-yr min)</span>
+          </div>
+          <div class="bg-slate-950/60 border border-slate-800 rounded px-2.5 py-1.5 flex items-center justify-between">
+            <span class="font-medium text-slate-200">BNS §3(5)</span>
+            <span class="text-slate-400 text-[11px]">Joint Common Intention</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Defense Attack Vectors -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Active Defense Strategy Vectors</h4>
+          <span class="text-[11px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono">6 Detected</span>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-amber-300">1. TIP Vitiation (Rule 34 CRoP)</span>
+              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">§7 BSA</span>
+            </div>
+            <p class="text-slate-400 text-[11px] mt-1 leading-snug">19-day delay, dummy mismatch, and photo exposure before parade at Cherlapally (<em class="text-slate-300">Shaikh Umar Ahmed Shaikh</em>).</p>
+          </div>
+
+          <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-amber-300">2. Flawed Open Recovery</span>
+              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">§23 BSA</span>
+            </div>
+            <p class="text-slate-400 text-[11px] mt-1 leading-snug">Phone allegedly found in open roadside bush on Botanical Garden road without exclusive possession (<em class="text-slate-300">Bodhraj</em>).</p>
+          </div>
+
+          <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-amber-300">3. Non-Vicarious §311 BNS</span>
+              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">§311 BNS</span>
+            </div>
+            <p class="text-slate-400 text-[11px] mt-1 leading-snug">Strict personal liability. Farhan was unarmed rider; iron rod attributed only to co-accused (<em class="text-slate-300">Phool Kumar</em>).</p>
+          </div>
+
+          <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-amber-300">4. CCTV & CDR Inadmissible</span>
+              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">§63(4) BSA</span>
+            </div>
+            <p class="text-slate-400 text-[11px] mt-1 leading-snug">Lack of mandatory Section 63(4) BSA certificate and SHA-256 hash (<em class="text-slate-300">Arjun Panditrao Khotkar</em>).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Witnesses List -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
+        <h4 class="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">Prosecution Witnesses (PWs)</h4>
+        <div class="space-y-1.5 text-xs">
+          <div class="p-2 rounded bg-slate-950/40 border border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-700" onclick="setWitness('PW1')">
+            <div>
+              <span class="font-bold text-slate-200">PW-1: Rajesh Sharma</span>
+              <span class="text-slate-400 block text-[11px]">Complainant / Eyewitness</span>
+            </div>
+            <button class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded">Target</button>
+          </div>
+          <div class="p-2 rounded bg-slate-950/40 border border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-700" onclick="setWitness('PW2')">
+            <div>
+              <span class="font-bold text-slate-200">PW-2: K. Venkat Rao</span>
+              <span class="text-slate-400 block text-[11px]">Panch Witness (Auto Driver)</span>
+            </div>
+            <button class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded">Target</button>
+          </div>
+          <div class="p-2 rounded bg-slate-950/40 border border-slate-800 flex items-center justify-between">
+            <div>
+              <span class="font-bold text-slate-200">PW-3: S. Ramesh</span>
+              <span class="text-slate-400 block text-[11px]">Sub-Inspector / IO (Gachibowli PS)</span>
+            </div>
+          </div>
+          <div class="p-2 rounded bg-slate-950/40 border border-slate-800 flex items-center justify-between">
+            <div>
+              <span class="font-bold text-slate-200">PW-4: Sri M. Anand Kumar</span>
+              <span class="text-slate-400 block text-[11px]">II MM Cyberabad (TIP Magistrate)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Right Area: Courtroom Simulation Dialogue (8 cols) -->
+    <main class="col-span-12 lg:col-span-8 flex flex-col bg-slate-950 overflow-hidden h-[calc(100vh-105px)]">
+
+      <!-- Stage & Witness Indicator Banner -->
+      <div class="bg-slate-900/90 border-b border-slate-800 px-6 py-2.5 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400">Current Hearing:</span>
+          <span id="active-stage-label" class="text-xs font-semibold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded border border-amber-400/20">Bail Hearing (Section 480 BNSS)</span>
+        </div>
+        <div id="witness-indicator" class="text-xs text-slate-400 hidden">
+          Witness in Box: <strong id="active-witness-label" class="text-blue-400">PW1</strong>
+        </div>
+      </div>
+
+      <!-- Conversation Chat Window -->
+      <div id="chat-stream" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scroll">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <!-- Quick Action Prompt Pills -->
+      <div class="bg-slate-950/90 border-t border-slate-800/80 px-6 py-2.5 flex items-center gap-2 overflow-x-auto">
+        <span class="text-xs text-slate-400 whitespace-nowrap">Suggested Submissions:</span>
+        <button onclick="sendQuickPrompt('bail')" class="whitespace-nowrap text-xs bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 px-3 py-1 rounded-full transition">⚖️ Argue Bail (§480 / §479 BNSS)</button>
+        <button onclick="sendQuickPrompt('discharge')" class="whitespace-nowrap text-xs bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 px-3 py-1 rounded-full transition">📄 Move for Discharge (§250 BNSS)</button>
+        <button onclick="sendQuickPrompt('pw1')" class="whitespace-nowrap text-xs bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 px-3 py-1 rounded-full transition">🔍 Cross-examine PW-1 (Complainant)</button>
+        <button onclick="sendQuickPrompt('pw2')" class="whitespace-nowrap text-xs bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 px-3 py-1 rounded-full transition">🌳 Cross-examine PW-2 (Open Recovery)</button>
+        <button onclick="sendQuickPrompt('final')" class="whitespace-nowrap text-xs bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 px-3 py-1 rounded-full transition">🏛️ Final Arguments (§257 BNSS)</button>
+      </div>
+
+      <!-- User Message Input Form -->
+      <div class="p-4 bg-slate-950 border-t border-slate-800">
+        <form onsubmit="handleSend(event)" class="flex gap-2">
+          <!-- Role selector -->
+          <select id="speaker-select" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-500">
+            <option value="JUDGE">Role: Judge</option>
+            <option value="PROSECUTOR">Role: Prosecutor</option>
+            <option value="STUDENT_PROSECUTOR">Role: Student (Prosecution)</option>
+            <option value="STUDENT_DEFENSE">Role: Student (Co-Counsel)</option>
+          </select>
+
+          <!-- Input text -->
+          <input
+            id="message-input"
+            type="text"
+            placeholder="Type your judicial question, prosecutor submission, or witness tender..."
+            class="flex-1 bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-500 rounded-lg px-4 py-2 focus:outline-none focus:border-amber-500"
+          />
+
+          <!-- Submit button -->
+          <button
+            type="submit"
+            id="submit-btn"
+            class="bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs px-5 py-2 rounded-lg transition flex items-center gap-1.5 shadow"
+          >
+            <span>Proceed</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </form>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    let currentStage = 'bail_hearing';
+    let currentWitness = null;
+
+    const quickPrompts = {
+      bail: {
+        speaker: 'JUDGE',
+        stage: 'bail_hearing',
+        text: 'The court calls Sessions Case No. 142 of 2024. Accused Mohd. Farhan is produced from judicial custody. Public Prosecutor opposes bail citing Section 311 BNS and recovery of stolen OnePlus mobile phone. Defense Counsel, what is your submission on regular bail?'
+      },
+      discharge: {
+        speaker: 'JUDGE',
+        stage: 'discharge_application',
+        text: 'We have perused the chargesheet and Section 230 BNSS documents. Learned Public Prosecutor prays for framing charges under Section 309(4) and Section 311 BNS. Does the Defense Counsel move for discharge under Section 250 BNSS?'
+      },
+      pw1: {
+        speaker: 'PROSECUTOR',
+        stage: 'prosecution_evidence',
+        witness: 'PW1',
+        text: 'PW-1 (Complainant Rajesh Sharma) is in the witness box. PW-1 has deposed that he was robbed at 23:30 hrs near Wipro Circle and identified Accused Mohd. Farhan in Cherlapally prison. The witness is now tendered for cross-examination.'
+      },
+      pw2: {
+        speaker: 'PROSECUTOR',
+        stage: 'prosecution_evidence',
+        witness: 'PW2',
+        text: 'PW-2 (Panch Witness K. Venkat Rao) has testified that Accused led police to the bushes on Botanical Garden road and recovered the complainant\'s OnePlus mobile phone under Ex.P-2. Witness is tendered for cross-examination.'
+      },
+      final: {
+        speaker: 'JUDGE',
+        stage: 'final_arguments',
+        text: 'Prosecution evidence is closed. Section 351 BNSS examination is completed. The Court now calls upon the Defense Counsel to advance final arguments under Section 257 BNSS.'
+      }
+    };
+
+    function updateActiveStageButton(stage) {
+      document.querySelectorAll('.stage-btn').forEach(btn => {
+        btn.classList.remove('bg-amber-600', 'text-white');
+        btn.classList.add('bg-slate-800/80', 'text-slate-300');
+      });
+      const activeBtn = document.getElementById(`btn-${stage}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-800/80', 'text-slate-300');
+        activeBtn.classList.add('bg-amber-600', 'text-white');
+      }
+    }
+
+    async function setStage(stage) {
+      currentStage = stage;
+      updateActiveStageButton(stage);
+      try {
+        const res = await fetch('/api/stage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stage: stage })
+        });
+        const data = await res.json();
+        document.getElementById('active-stage-label').textContent = data.stage_label;
+      } catch (e) {
+        console.warn('API error or running standalone:', e);
+      }
+    }
+
+    async function setWitness(witnessId) {
+      currentWitness = witnessId;
+      document.getElementById('witness-indicator').classList.remove('hidden');
+      document.getElementById('active-witness-label').textContent = witnessId;
+      try {
+        await fetch('/api/witness', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ witness_id: witnessId })
+        });
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    function appendMessage(speaker, text, stage) {
+      const container = document.getElementById('chat-stream');
+      const isDefense = speaker === 'DEFENDANT';
+      const isJudge = speaker === 'JUDGE';
+
+      let badgeBg = 'bg-slate-800 text-slate-300 border-slate-700';
+      let icon = '⚖️';
+      let title = speaker;
+
+      if (isDefense) {
+        badgeBg = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20';
+        icon = '🛡️';
+        title = 'Senior Defense Counsel (Adv. for Accused Farhan)';
+      } else if (isJudge) {
+        badgeBg = 'bg-amber-500/10 text-amber-300 border-amber-500/20';
+        icon = '⚖️';
+        title = 'Principal District & Sessions Judge';
+      } else if (speaker.includes('PROSECUTOR')) {
+        badgeBg = 'bg-rose-500/10 text-rose-300 border-rose-500/20';
+        icon = '⚔️';
+        title = speaker === 'PROSECUTOR' ? 'Public Prosecutor for Telangana' : 'Student (Prosecutor)';
+      }
+
+      const msgCard = document.createElement('div');
+      msgCard.className = `p-4 rounded-xl border ${badgeBg} ${isDefense ? 'bg-slate-900/90 shadow-md ml-4' : 'bg-slate-950/80 mr-4'} transition`;
+
+      // Format markdown-like bold and line breaks
+      const formattedText = text
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+      msgCard.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">${icon}</span>
+            <span class="text-xs font-bold tracking-tight">${title}</span>
+          </div>
+          <span class="text-[10px] opacity-70 font-mono uppercase">${stage || currentStage}</span>
+        </div>
+        <div class="text-xs leading-relaxed text-slate-200 space-y-2">
+          ${formattedText}
+        </div>
+      `;
+
+      container.appendChild(msgCard);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function handleSend(e) {
+      e.preventDefault();
+      const input = document.getElementById('message-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const speaker = document.getElementById('speaker-select').value;
+      input.value = '';
+
+      // Append user utterance
+      appendMessage(speaker, text, currentStage);
+
+      // Call API
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin mr-1">⌛</span> Defense Deliberating...`;
+
+      try {
+        const res = await fetch('/api/turn', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: text,
+            speaker: speaker
+          })
+        });
+        const data = await res.json();
+        appendMessage('DEFENDANT', data.response, currentStage);
+      } catch (err) {
+        console.error(err);
+        appendMessage('SYSTEM', 'Error communicating with Defendant Agent backend. Make sure server is running.', currentStage);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Proceed</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>`;
+      }
+    }
+
+    async function sendQuickPrompt(key) {
+      const p = quickPrompts[key];
+      if (!p) return;
+
+      if (p.stage) {
+        await setStage(p.stage);
+      }
+      if (p.witness) {
+        await setWitness(p.witness);
+      }
+
+      document.getElementById('speaker-select').value = p.speaker;
+      document.getElementById('message-input').value = p.text;
+      handleSend(new Event('submit'));
+    }
+
+    async function refreshData() {
+      try {
+        const statusRes = await fetch('/api/status');
+        const status = await statusRes.json();
+        currentStage = status.current_stage;
+        updateActiveStageButton(currentStage);
+        document.getElementById('active-stage-label').textContent = status.current_stage_label;
+
+        // Load conversation history
+        const histRes = await fetch('/api/history');
+        const history = await histRes.json();
+        const container = document.getElementById('chat-stream');
+        container.innerHTML = '';
+        history.forEach(item => {
+          appendMessage(item.speaker, item.message, item.stage);
+        });
+      } catch (e) {
+        console.warn('Could not load initial history from API:', e);
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      refreshData();
+    });
+  </script>
+</body>
+</html>
