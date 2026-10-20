@@ -232,6 +232,34 @@ class DefendantAgent:
 
         return new_case
 
+    def ingest_case_file(
+        self,
+        file_input: Any,
+        file_name: Optional[str] = None,
+        mime_type: Optional[str] = None,
+    ) -> CaseFile:
+        """
+        Dynamically ingests case details from a file (PDF, Image, Text, or JSON),
+        extracts text via MultiFormatFileExtractor, normalizes to CaseFile,
+        saves to SQLite, and updates the active agent state.
+        """
+        from defendant_agent.case_parser import CaseParser
+
+        parser = CaseParser(llm=self.llm)
+        new_case = parser.parse_file(file_input, file_name=file_name, mime_type=mime_type)
+
+        # Save to SQLite
+        self.db.save_case(new_case)
+
+        # Update active agent context
+        self.case = new_case
+        self.case_id = new_case.case_id
+        self.state = self.db.get_trial_state(new_case.case_id)
+        self._refresh_strategies()
+
+        return new_case
+
+
     def get_co_counsel_guidance(
         self,
         incoming_message: Optional[str] = None,

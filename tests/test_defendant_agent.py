@@ -7,6 +7,7 @@ Run via:
 """
 
 import os
+import json
 import unittest
 from pathlib import Path
 
@@ -157,6 +158,78 @@ class TestDefendantAgentSuite(unittest.TestCase):
         )
         self.assertIn("statutory", feedback.lower())
         self.assertIn("precedent", feedback.lower())
+
+    def test_09_multi_format_file_extractor(self):
+        """Verify MultiFormatFileExtractor handles TXT, JSON, PDF, and Image formats."""
+        from defendant_agent.file_extractor import MultiFormatFileExtractor
+        extractor = MultiFormatFileExtractor()
+
+        # 1. Plain text extraction
+        txt_bytes = b"State of Telangana vs Ramesh. Accused of robbery under Section 309 BNS at Gachibowli."
+        txt_res = extractor.extract_text(txt_bytes, file_name="case_record.txt", mime_type="text/plain")
+        self.assertIn("State of Telangana", txt_res)
+        self.assertIn("Section 309 BNS", txt_res)
+
+        # 2. JSON extraction
+        json_data = {
+            "case_id": "SC/999/2024",
+            "accused": {"name": "Test Accused", "age": 25},
+            "charges": ["BNS 309(4)"],
+            "summary": "Robbery incident at Hyderabad."
+        }
+        json_bytes = json.dumps(json_data).encode("utf-8")
+        json_res = extractor.extract_text(json_bytes, file_name="case_data.json", mime_type="application/json")
+        self.assertIn("Test Accused", json_res)
+        self.assertIn("SC/999/2024", json_res)
+
+        # 3. PDF extraction
+        import pypdf
+        import io
+        writer = pypdf.PdfWriter()
+        writer.add_blank_page(width=200, height=200)
+        pdf_stream = io.BytesIO()
+        writer.write(pdf_stream)
+        pdf_bytes = pdf_stream.getvalue()
+        pdf_res = extractor.extract_text(pdf_bytes, file_name="chargesheet.pdf", mime_type="application/pdf")
+        self.assertIsInstance(pdf_res, str)
+        self.assertTrue(len(pdf_res) > 0)
+
+        # 4. Image extraction (PIL mock fallback)
+        from PIL import Image
+        img = Image.new("RGB", (64, 64), color="blue")
+        img_stream = io.BytesIO()
+        img.save(img_stream, format="PNG")
+        img_bytes = img_stream.getvalue()
+        img_res = extractor.extract_text(img_bytes, file_name="panchnama.png", mime_type="image/png")
+        self.assertIn("Image", img_res)
+
+    def test_10_ingest_case_file_end_to_end(self):
+        """Verify end-to-end ingestion of a file payload through the agent."""
+        test_file_content = (
+            "FIR No. 88/2024, PS Madhapur, Cyberabad. "
+            "Accused: Vikram Singh, age 24. Charged under BNS 309(4) for motorcycle robbery. "
+            "Witnesses: PW1 Complainant Rajesh, PW2 Constable Srinivas. "
+            "Recovery: Watch found near bushes by roadside without independent witnesses."
+        ).encode("utf-8")
+
+        new_case = self.agent.ingest_case_file(
+            file_input=test_file_content,
+            file_name="fir_88_2024.txt",
+            mime_type="text/plain",
+        )
+        self.assertIsNotNone(new_case)
+        self.assertEqual(self.agent.case_id, new_case.case_id)
+
+        # Verify saved in SQLite database
+        persisted = self.db.load_case(new_case.case_id)
+        self.assertIsNotNone(persisted)
+        self.assertEqual(persisted.accused.name, "Vikram Singh")
+        self.assertEqual(persisted.accused.age, 24)
+
+        # Verify guidance can be generated for this newly ingested case
+        guidance = self.agent.get_co_counsel_guidance()
+        self.assertIn("statutory_grounds", guidance)
+        self.assertIn("suggested_draft", guidance)
 
 
 if __name__ == "__main__":

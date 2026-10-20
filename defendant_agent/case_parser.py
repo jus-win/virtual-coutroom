@@ -129,17 +129,39 @@ INSTRUCTIONS:
 """
 
 
+from defendant_agent.file_extractor import MultiFormatFileExtractor, FileExtractionError
+
+
 class CaseParser:
     """Parses arbitrary case descriptions into CaseFile domain objects."""
 
     def __init__(self, llm: Optional[BaseLLMProvider] = None):
         self.llm = llm or get_llm_provider()
+        self.file_extractor = MultiFormatFileExtractor(llm=self.llm)
+
+    def parse_file(
+        self,
+        file_input: Any,
+        file_name: Optional[str] = None,
+        mime_type: Optional[str] = None,
+    ) -> CaseFile:
+        """
+        Ingest case materials from a file (PDF, Image, Text, or JSON),
+        extract contents, and parse into a structured CaseFile.
+        """
+        extracted_text = self.file_extractor.extract_text(
+            file_input=file_input,
+            file_name=file_name,
+            mime_type=mime_type,
+        )
+        return self.parse_raw_text(extracted_text)
 
     def parse_raw_text(self, raw_input: str) -> CaseFile:
         """
         Take any raw text / JSON / unformatted narrative and return a validated CaseFile.
         """
         raw_trimmed = raw_input.strip()
+
 
         # If user directly pasted JSON, try direct parsing first
         if (raw_trimmed.startswith("{") and raw_trimmed.endswith("}")) or "```json" in raw_trimmed:

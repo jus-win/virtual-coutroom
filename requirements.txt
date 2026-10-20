@@ -10,3 +10,8 @@ python-dotenv>=1.0.0
 
 # Rich terminal output for CLI runner
 rich>=13.0.0
+
+# Document & Image Processing (PDF, Images, OCR)
+pypdf>=5.0.0
+pillow>=10.0.0
+

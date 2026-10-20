@@ -147,25 +147,43 @@ class CourtroomAPIHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"witness_id": witness_id}).encode("utf-8"))
 
         elif path == "/api/ingest_case":
+            file_base64 = data.get("file_base64")
+            file_name = data.get("file_name", "uploaded_document")
+            mime_type = data.get("mime_type")
             raw_text = data.get("raw_text", "").strip()
-            if not raw_text:
-                self._set_headers(400, "application/json")
-                self.wfile.write(b'{"error": "raw_text cannot be empty"}')
-                return
 
-            new_case = CourtroomServerContext.agent.ingest_new_case(raw_text)
-            status = CourtroomServerContext.agent.get_status()
-            brief = CourtroomServerContext.agent.generate_defense_brief()
+            try:
+                if file_base64:
+                    import base64
+                    file_bytes = base64.b64decode(file_base64)
+                    new_case = CourtroomServerContext.agent.ingest_case_file(
+                        file_input=file_bytes,
+                        file_name=file_name,
+                        mime_type=mime_type,
+                    )
+                elif raw_text:
+                    new_case = CourtroomServerContext.agent.ingest_new_case(raw_text)
+                else:
+                    self._set_headers(400, "application/json")
+                    self.wfile.write(b'{"error": "Please provide either a file upload or raw_text"}')
+                    return
 
-            self._set_headers(200)
-            self.wfile.write(
-                json.dumps({
-                    "status": "success",
-                    "case_id": new_case.case_id,
-                    "case": status,
-                    "brief": brief,
-                }).encode("utf-8")
-            )
+                status = CourtroomServerContext.agent.get_status()
+                brief = CourtroomServerContext.agent.generate_defense_brief()
+
+                self._set_headers(200)
+                self.wfile.write(
+                    json.dumps({
+                        "status": "success",
+                        "case_id": new_case.case_id,
+                        "case": status,
+                        "brief": brief,
+                    }).encode("utf-8")
+                )
+            except Exception as e:
+                self._set_headers(500, "application/json")
+                self.wfile.write(json.dumps({"error": f"Failed to ingest case: {str(e)}"}).encode("utf-8"))
+
 
         elif path == "/api/guidance":
             incoming_message = data.get("message")
