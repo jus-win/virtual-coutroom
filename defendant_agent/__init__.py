@@ -22,6 +22,7 @@ from defendant_agent.models import (
 from defendant_agent.database import CourtroomDatabase
 from defendant_agent.strategy_analyzer import StrategyAnalyzer
 from defendant_agent.prompt_builder import CourtroomPromptBuilder
+from defendant_agent.case_parser import CaseParser
 from defendant_agent.llm_provider import (
     BaseLLMProvider,
     GeminiProvider,
@@ -36,7 +37,9 @@ __all__ = [
     "CourtroomDatabase",
     "StrategyAnalyzer",
     "CourtroomPromptBuilder",
+    "CaseParser",
     "BaseLLMProvider",
+
     "GeminiProvider",
     "OpenAIProvider",
     "OfflineMockProvider",

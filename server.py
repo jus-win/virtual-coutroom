@@ -146,9 +146,47 @@ class CourtroomAPIHandler(BaseHTTPRequestHandler):
             self._set_headers(200)
             self.wfile.write(json.dumps({"witness_id": witness_id}).encode("utf-8"))
 
+        elif path == "/api/ingest_case":
+            raw_text = data.get("raw_text", "").strip()
+            if not raw_text:
+                self._set_headers(400, "application/json")
+                self.wfile.write(b'{"error": "raw_text cannot be empty"}')
+                return
+
+            new_case = CourtroomServerContext.agent.ingest_new_case(raw_text)
+            status = CourtroomServerContext.agent.get_status()
+            brief = CourtroomServerContext.agent.generate_defense_brief()
+
+            self._set_headers(200)
+            self.wfile.write(
+                json.dumps({
+                    "status": "success",
+                    "case_id": new_case.case_id,
+                    "case": status,
+                    "brief": brief,
+                }).encode("utf-8")
+            )
+
+        elif path == "/api/guidance":
+            incoming_message = data.get("message")
+            incoming_speaker = data.get("speaker")
+            guidance = CourtroomServerContext.agent.get_co_counsel_guidance(
+                incoming_message=incoming_message,
+                incoming_speaker=incoming_speaker,
+            )
+            self._set_headers(200)
+            self.wfile.write(json.dumps(guidance).encode("utf-8"))
+
+        elif path == "/api/evaluate_defense":
+            submission = data.get("submission", "").strip()
+            feedback = CourtroomServerContext.agent.evaluate_student_defense(submission)
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"feedback": feedback}).encode("utf-8"))
+
         else:
             self._set_headers(404, "application/json")
             self.wfile.write(b'{"error": "Endpoint not found"}')
+
 
     def log_message(self, format, *args):
         # Concise console logging

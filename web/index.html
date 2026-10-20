@@ -32,12 +32,21 @@
       <div>
         <div class="flex items-center gap-2">
           <h1 class="text-base font-bold tracking-tight text-white">Court of Principal District & Sessions Judge</h1>
-          <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium">Rangareddy, Telangana</span>
+          <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-medium" id="header-court-jurisdiction">Rangareddy, Telangana</span>
         </div>
-        <p class="text-xs text-slate-400">Sessions Case No. <span class="font-semibold text-slate-200">SC/142/2024</span> &bull; State of Telangana v. Mohd. Farhan &bull; BNS 2023</p>
+        <p class="text-xs text-slate-400">
+          Case: <span class="font-semibold text-slate-200" id="header-case-id">SC/142/2024</span> &bull;
+          <span id="header-case-title">State of Telangana v. Mohd. Farhan</span> &bull; BNS 2023
+        </p>
       </div>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2.5">
+      <!-- Ingest New Case Button -->
+      <button onclick="openIngestModal()" class="flex items-center gap-1.5 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-lg text-xs font-medium transition shadow-sm">
+        <span>📥</span>
+        <span>Ingest Any Case</span>
+      </button>
+
       <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         <span>Defendant Agent: <strong class="text-emerald-400">Active</strong></span>
@@ -67,35 +76,35 @@
     <aside class="col-span-12 lg:col-span-4 border-r border-slate-800 bg-slate-950/40 p-5 overflow-y-auto custom-scroll space-y-5">
 
       <!-- Accused Summary Card -->
-      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm" id="accused-card">
         <div class="flex items-start justify-between">
           <div>
-            <span class="text-[11px] font-semibold tracking-wider text-amber-400 uppercase">Accused A-1</span>
-            <h3 class="text-sm font-bold text-white mt-0.5">Mohd. Farhan (Age: 22)</h3>
-            <p class="text-xs text-slate-400">Delivery Executive &bull; Hafeezpet, Cyberabad</p>
+            <span class="text-[11px] font-semibold tracking-wider text-amber-400 uppercase">Accused Person (A-1)</span>
+            <h3 class="text-sm font-bold text-white mt-0.5" id="dossier-accused-name">Mohd. Farhan (Age: 22)</h3>
+            <p class="text-xs text-slate-400" id="dossier-accused-address">Delivery Executive &bull; Hafeezpet, Cyberabad</p>
           </div>
-          <span class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-medium">In Custody</span>
+          <span class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded font-medium" id="dossier-bail-status">In Custody</span>
         </div>
         <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
           <div>
             <span class="text-slate-400 block text-[11px]">First-Time Offender</span>
-            <span class="text-emerald-400 font-medium">Yes (§479 BNSS)</span>
+            <span class="text-emerald-400 font-medium" id="dossier-first-timer">Yes (§479 BNSS)</span>
           </div>
           <div>
             <span class="text-slate-400 block text-[11px]">Weapon Recovered</span>
-            <span class="text-slate-300 font-medium">None from A-1</span>
+            <span class="text-slate-300 font-medium" id="dossier-weapon-status">None from A-1</span>
           </div>
         </div>
         <div class="mt-2.5 bg-slate-950/60 rounded p-2 text-xs border border-slate-800/80">
           <span class="text-amber-400/90 font-medium block text-[11px]">Verified Alibi (§9 BSA):</span>
-          <span class="text-slate-300 text-[11px] leading-relaxed">Swiggy delivery OTP completed at Waverock, Financial District at 23:25 hrs (3.5 km away).</span>
+          <span class="text-slate-300 text-[11px] leading-relaxed" id="dossier-alibi">Swiggy delivery OTP completed at Waverock, Financial District at 23:25 hrs (3.5 km away).</span>
         </div>
       </div>
 
       <!-- Charges Framed -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
         <h4 class="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">Prosecution Charges Framed</h4>
-        <div class="space-y-1.5 text-xs">
+        <div class="space-y-1.5 text-xs" id="dossier-charges-container">
           <div class="bg-slate-950/60 border border-slate-800 rounded px-2.5 py-1.5 flex items-center justify-between">
             <span class="font-medium text-slate-200">BNS §309(4)</span>
             <span class="text-slate-400 text-[11px]">Robbery (Up to 10 yrs)</span>
@@ -104,10 +113,6 @@
             <span class="font-medium text-rose-300">BNS §311</span>
             <span class="text-rose-400 text-[11px]">Deadly weapon (7-yr min)</span>
           </div>
-          <div class="bg-slate-950/60 border border-slate-800 rounded px-2.5 py-1.5 flex items-center justify-between">
-            <span class="font-medium text-slate-200">BNS §3(5)</span>
-            <span class="text-slate-400 text-[11px]">Joint Common Intention</span>
-          </div>
         </div>
       </div>
 
@@ -115,9 +120,9 @@
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
         <div class="flex items-center justify-between mb-2">
           <h4 class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Active Defense Strategy Vectors</h4>
-          <span class="text-[11px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono">6 Detected</span>
+          <span class="text-[11px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono" id="dossier-vectors-count">6 Detected</span>
         </div>
-        <div class="space-y-2 text-xs">
+        <div class="space-y-2 text-xs" id="dossier-vectors-container">
           <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
             <div class="flex items-center justify-between">
               <span class="font-semibold text-amber-300">1. TIP Vitiation (Rule 34 CRoP)</span>
@@ -125,7 +130,6 @@
             </div>
             <p class="text-slate-400 text-[11px] mt-1 leading-snug">19-day delay, dummy mismatch, and photo exposure before parade at Cherlapally (<em class="text-slate-300">Shaikh Umar Ahmed Shaikh</em>).</p>
           </div>
-
           <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
             <div class="flex items-center justify-between">
               <span class="font-semibold text-amber-300">2. Flawed Open Recovery</span>
@@ -133,7 +137,6 @@
             </div>
             <p class="text-slate-400 text-[11px] mt-1 leading-snug">Phone allegedly found in open roadside bush on Botanical Garden road without exclusive possession (<em class="text-slate-300">Bodhraj</em>).</p>
           </div>
-
           <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
             <div class="flex items-center justify-between">
               <span class="font-semibold text-amber-300">3. Non-Vicarious §311 BNS</span>
@@ -141,21 +144,13 @@
             </div>
             <p class="text-slate-400 text-[11px] mt-1 leading-snug">Strict personal liability. Farhan was unarmed rider; iron rod attributed only to co-accused (<em class="text-slate-300">Phool Kumar</em>).</p>
           </div>
-
-          <div class="border border-slate-800 bg-slate-950/50 rounded-lg p-2.5">
-            <div class="flex items-center justify-between">
-              <span class="font-semibold text-amber-300">4. CCTV & CDR Inadmissible</span>
-              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">§63(4) BSA</span>
-            </div>
-            <p class="text-slate-400 text-[11px] mt-1 leading-snug">Lack of mandatory Section 63(4) BSA certificate and SHA-256 hash (<em class="text-slate-300">Arjun Panditrao Khotkar</em>).</p>
-          </div>
         </div>
       </div>
 
       <!-- Witnesses List -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-sm">
         <h4 class="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-2">Prosecution Witnesses (PWs)</h4>
-        <div class="space-y-1.5 text-xs">
+        <div class="space-y-1.5 text-xs" id="dossier-witnesses-container">
           <div class="p-2 rounded bg-slate-950/40 border border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-700" onclick="setWitness('PW1')">
             <div>
               <span class="font-bold text-slate-200">PW-1: Rajesh Sharma</span>
@@ -169,18 +164,6 @@
               <span class="text-slate-400 block text-[11px]">Panch Witness (Auto Driver)</span>
             </div>
             <button class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded">Target</button>
-          </div>
-          <div class="p-2 rounded bg-slate-950/40 border border-slate-800 flex items-center justify-between">
-            <div>
-              <span class="font-bold text-slate-200">PW-3: S. Ramesh</span>
-              <span class="text-slate-400 block text-[11px]">Sub-Inspector / IO (Gachibowli PS)</span>
-            </div>
-          </div>
-          <div class="p-2 rounded bg-slate-950/40 border border-slate-800 flex items-center justify-between">
-            <div>
-              <span class="font-bold text-slate-200">PW-4: Sri M. Anand Kumar</span>
-              <span class="text-slate-400 block text-[11px]">II MM Cyberabad (TIP Magistrate)</span>
-            </div>
           </div>
         </div>
       </div>
@@ -196,8 +179,43 @@
           <span class="text-xs text-slate-400">Current Hearing:</span>
           <span id="active-stage-label" class="text-xs font-semibold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded border border-amber-400/20">Bail Hearing (Section 480 BNSS)</span>
         </div>
-        <div id="witness-indicator" class="text-xs text-slate-400 hidden">
-          Witness in Box: <strong id="active-witness-label" class="text-blue-400">PW1</strong>
+        <div class="flex items-center gap-3">
+          <div id="witness-indicator" class="text-xs text-slate-400 hidden">
+            Witness in Box: <strong id="active-witness-label" class="text-blue-400">PW1</strong>
+          </div>
+          <button onclick="toggleCoCounselDeck()" id="btn-toggle-co-counsel" class="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-md transition flex items-center gap-1">
+            <span>💡</span>
+            <span>AI Co-Counsel Whisper</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Co-Counsel Strategy Deck (Expandable Whisper Box) -->
+      <div id="co-counsel-deck" class="bg-slate-900/95 border-b border-emerald-500/30 p-4 transition-all duration-300 text-xs space-y-2.5 shadow-lg">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🛡️</span>
+            <div>
+              <h4 class="font-bold text-emerald-400">Senior Defense Co-Counsel Advice</h4>
+              <p class="text-[11px] text-slate-400" id="co-counsel-objective">Objective: Secure regular bail under Section 480 read with Section 479 BNSS.</p>
+            </div>
+          </div>
+          <button onclick="copySuggestedDraft()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] px-3 py-1 rounded font-medium transition shadow">
+            📋 Copy Suggested Speech
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] pt-1">
+          <div class="bg-slate-950/70 p-2 rounded border border-slate-800">
+            <span class="text-amber-400 font-semibold block">Statutes to Cite:</span>
+            <span class="text-slate-300" id="co-counsel-statutes">Section 480 BNSS, Section 479(1) BNSS</span>
+          </div>
+          <div class="bg-slate-950/70 p-2 rounded border border-slate-800">
+            <span class="text-amber-400 font-semibold block">Key Landmark Precedents:</span>
+            <span class="text-slate-300" id="co-counsel-precedents">Satender Kumar Antil v. CBI (2022), Phool Kumar (1975)</span>
+          </div>
+        </div>
+        <div class="bg-slate-950/60 p-2.5 rounded border border-slate-800 text-[11px] text-slate-300 italic" id="co-counsel-draft">
+          "May it please this Hon'ble Court. On behalf of the applicant/accused, we submit this application under Section 480 read with Section 479 BNSS 2023..."
         </div>
       </div>
 
@@ -220,20 +238,30 @@
       <div class="p-4 bg-slate-950 border-t border-slate-800">
         <form onsubmit="handleSend(event)" class="flex gap-2">
           <!-- Role selector -->
-          <select id="speaker-select" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-500">
+          <select id="speaker-select" onchange="handleRoleChange()" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-500">
+            <option value="STUDENT_DEFENSE">Role: Student (Defense Counsel)</option>
+            <option value="PROSECUTOR">Role: Prosecutor (Against AI Defense)</option>
             <option value="JUDGE">Role: Judge</option>
-            <option value="PROSECUTOR">Role: Prosecutor</option>
-            <option value="STUDENT_PROSECUTOR">Role: Student (Prosecution)</option>
-            <option value="STUDENT_DEFENSE">Role: Student (Co-Counsel)</option>
           </select>
 
           <!-- Input text -->
           <input
             id="message-input"
             type="text"
-            placeholder="Type your judicial question, prosecutor submission, or witness tender..."
+            placeholder="Type your defense submission, cross-examination question, or judicial query..."
             class="flex-1 bg-slate-900 border border-slate-700 text-sm text-white placeholder-slate-500 rounded-lg px-4 py-2 focus:outline-none focus:border-amber-500"
           />
+
+          <!-- Student evaluate button (optional) -->
+          <button
+            type="button"
+            onclick="evaluateMyDraft()"
+            id="evaluate-btn"
+            class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 text-xs px-3 py-2 rounded-lg transition"
+            title="Senior Counsel evaluates your draft before you submit"
+          >
+            Review Draft
+          </button>
 
           <!-- Submit button -->
           <button
@@ -251,15 +279,56 @@
 
   </div>
 
+  <!-- Dynamic Case Ingestion Modal -->
+  <div id="ingest-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📥</span>
+          <div>
+            <h3 class="text-base font-bold text-white">Ingest Any Case Details</h3>
+            <p class="text-xs text-slate-400">Paste FIR narrative, police chargesheet, bullet points, news summary, or JSON.</p>
+          </div>
+        </div>
+        <button onclick="closeIngestModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-xs font-semibold text-slate-300">Case Facts / Description (Any Format):</label>
+        <textarea
+          id="raw-case-input"
+          rows="10"
+          placeholder="Paste raw case facts here... E.g.: On 15th October near Hitec City Hyderabad, complainant Rahul was walking when two men on a bike stopped, threatened him with a knife and snatched his iPhone and gold chain. Police arrested Suresh next day and recovered the phone from a public bus stop. Accused claims he was at an office meeting..."
+          class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 custom-scroll font-mono"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <button onclick="loadSampleText()" class="text-xs text-indigo-400 hover:text-indigo-300 underline">
+          Load Sample Raw Police Story
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeIngestModal()" class="px-4 py-2 rounded-lg border border-slate-700 text-xs text-slate-300 hover:bg-slate-800 transition">
+            Cancel
+          </button>
+          <button onclick="submitRawCase()" id="btn-ingest-submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs px-5 py-2 rounded-lg transition flex items-center gap-1.5 shadow">
+            <span>Analyze & Load Case</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     let currentStage = 'bail_hearing';
     let currentWitness = null;
+    let latestGuidance = null;
 
     const quickPrompts = {
       bail: {
         speaker: 'JUDGE',
         stage: 'bail_hearing',
-        text: 'The court calls Sessions Case No. 142 of 2024. Accused Mohd. Farhan is produced from judicial custody. Public Prosecutor opposes bail citing Section 311 BNS and recovery of stolen OnePlus mobile phone. Defense Counsel, what is your submission on regular bail?'
+        text: 'The court calls the case. Accused is produced from judicial custody. Public Prosecutor opposes bail stating Section 311 BNS carries 7-year minimum punishment. Defense Counsel, what is your submission on regular bail?'
       },
       discharge: {
         speaker: 'JUDGE',
@@ -270,13 +339,13 @@
         speaker: 'PROSECUTOR',
         stage: 'prosecution_evidence',
         witness: 'PW1',
-        text: 'PW-1 (Complainant Rajesh Sharma) is in the witness box. PW-1 has deposed that he was robbed at 23:30 hrs near Wipro Circle and identified Accused Mohd. Farhan in Cherlapally prison. The witness is now tendered for cross-examination.'
+        text: 'PW-1 (Complainant) is in the witness box and has deposed identifying the accused. Witness is now tendered for cross-examination.'
       },
       pw2: {
         speaker: 'PROSECUTOR',
         stage: 'prosecution_evidence',
         witness: 'PW2',
-        text: 'PW-2 (Panch Witness K. Venkat Rao) has testified that Accused led police to the bushes on Botanical Garden road and recovered the complainant\'s OnePlus mobile phone under Ex.P-2. Witness is tendered for cross-examination.'
+        text: 'PW-2 (Panch Witness) has testified that Accused led police to bushes and recovered property under panchnama. Witness is tendered for cross-examination.'
       },
       final: {
         speaker: 'JUDGE',
@@ -308,6 +377,7 @@
         });
         const data = await res.json();
         document.getElementById('active-stage-label').textContent = data.stage_label;
+        await loadCoCounselGuidance();
       } catch (e) {
         console.warn('API error or running standalone:', e);
       }
@@ -323,24 +393,89 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ witness_id: witnessId })
         });
+        await loadCoCounselGuidance();
       } catch (e) {
         console.warn(e);
       }
     }
 
+    async function loadCoCounselGuidance() {
+      try {
+        const res = await fetch('/api/guidance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stage: currentStage, witness_id: currentWitness })
+        });
+        const data = await res.json();
+        latestGuidance = data;
+
+        document.getElementById('co-counsel-objective').textContent = data.objective;
+        document.getElementById('co-counsel-statutes').textContent = (data.statutory_grounds || []).join(', ');
+        document.getElementById('co-counsel-precedents').textContent = (data.precedents || []).join(' | ');
+        document.getElementById('co-counsel-draft').textContent = `"${data.suggested_draft}"`;
+      } catch (err) {
+        console.warn('Could not load guidance:', err);
+      }
+    }
+
+    function toggleCoCounselDeck() {
+      const deck = document.getElementById('co-counsel-deck');
+      deck.classList.toggle('hidden');
+    }
+
+    function copySuggestedDraft() {
+      if (latestGuidance && latestGuidance.suggested_draft) {
+        document.getElementById('message-input').value = latestGuidance.suggested_draft;
+      }
+    }
+
+    async function evaluateMyDraft() {
+      const input = document.getElementById('message-input');
+      const text = input.value.trim();
+      if (!text) {
+        alert('Please type your defense submission first to get Senior Counsel feedback.');
+        return;
+      }
+      try {
+        const res = await fetch('/api/evaluate_defense', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ submission: text })
+        });
+        const data = await res.json();
+        appendMessage('DEFENDANT', `🛡️ **Senior Defense Counsel Feedback on Your Draft:**\n\n${data.feedback}`, currentStage);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function handleRoleChange() {
+      const role = document.getElementById('speaker-select').value;
+      const evalBtn = document.getElementById('evaluate-btn');
+      if (role === 'STUDENT_DEFENSE') {
+        evalBtn.classList.remove('hidden');
+      } else {
+        evalBtn.classList.add('hidden');
+      }
+    }
+
     function appendMessage(speaker, text, stage) {
       const container = document.getElementById('chat-stream');
-      const isDefense = speaker === 'DEFENDANT';
+      const isDefense = speaker === 'DEFENDANT' || speaker === 'STUDENT_DEFENSE';
       const isJudge = speaker === 'JUDGE';
 
       let badgeBg = 'bg-slate-800 text-slate-300 border-slate-700';
       let icon = '⚖️';
       let title = speaker;
 
-      if (isDefense) {
+      if (speaker === 'STUDENT_DEFENSE') {
+        badgeBg = 'bg-emerald-600/15 text-emerald-300 border-emerald-500/30';
+        icon = '🎓';
+        title = 'Student (Lead Defense Counsel)';
+      } else if (speaker === 'DEFENDANT') {
         badgeBg = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20';
         icon = '🛡️';
-        title = 'Senior Defense Counsel (Adv. for Accused Farhan)';
+        title = 'Senior Defense Counsel (AI Co-Counsel)';
       } else if (isJudge) {
         badgeBg = 'bg-amber-500/10 text-amber-300 border-amber-500/20';
         icon = '⚖️';
@@ -348,13 +483,12 @@
       } else if (speaker.includes('PROSECUTOR')) {
         badgeBg = 'bg-rose-500/10 text-rose-300 border-rose-500/20';
         icon = '⚔️';
-        title = speaker === 'PROSECUTOR' ? 'Public Prosecutor for Telangana' : 'Student (Prosecutor)';
+        title = 'Public Prosecutor for Telangana';
       }
 
       const msgCard = document.createElement('div');
       msgCard.className = `p-4 rounded-xl border ${badgeBg} ${isDefense ? 'bg-slate-900/90 shadow-md ml-4' : 'bg-slate-950/80 mr-4'} transition`;
 
-      // Format markdown-like bold and line breaks
       const formattedText = text
         .replace(/\n\n/g, '<br><br>')
         .replace(/\n/g, '<br>')
@@ -390,10 +524,10 @@
       // Append user utterance
       appendMessage(speaker, text, currentStage);
 
-      // Call API
+      // If user is STUDENT_DEFENSE, the AI Co-Counsel provides feedback / reinforcement
       const btn = document.getElementById('submit-btn');
       btn.disabled = true;
-      btn.innerHTML = `<span class="animate-spin mr-1">⌛</span> Defense Deliberating...`;
+      btn.innerHTML = `<span class="animate-spin mr-1">⌛</span> Processing...`;
 
       try {
         const res = await fetch('/api/turn', {
@@ -431,6 +565,57 @@
       handleSend(new Event('submit'));
     }
 
+    // Modal Ingestion
+    function openIngestModal() {
+      document.getElementById('ingest-modal').classList.remove('hidden');
+    }
+    function closeIngestModal() {
+      document.getElementById('ingest-modal').classList.add('hidden');
+    }
+
+    function loadSampleText() {
+      document.getElementById('raw-case-input').value =
+`Complainant: Naveen Reddy, age 32, tech consultant, r/o Kondapur, Hyderabad.
+Date of Incident: 25-09-2024 at 23:45 hrs near DLF Cybercity Road, Gachibowli.
+Facts: The complainant was returning home in his car when two unknown boys on a Duke motorcycle intercepted him. The pillion carried an iron wrench, broke the car quarter glass, threatened to kill him, and forcibly took his gold bracelet (12 grams) and Rolex watch (valued at Rs. 2,50,000).
+Police Investigation: Apprehended Accused A-1 (Salman, age 21, mechanic from Tolichowki) after 10 days. Alleged recovery of the Rolex watch was made from behind a public tea stall on Tolichowki main road. TIP conducted at prison with 22 days delay where photos were shown to complainant earlier on social media. Accused has no past criminal history and claims he was working at a car garage with punch-card logs.`;
+    }
+
+    async function submitRawCase() {
+      const text = document.getElementById('raw-case-input').value.trim();
+      if (!text) {
+        alert('Please enter or paste case facts first.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-ingest-submit');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin mr-1">⌛</span> Ingesting & Analyzing...`;
+
+      try {
+        const res = await fetch('/api/ingest_case', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ raw_text: text })
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          closeIngestModal();
+          alert(`Successfully ingested case: ${data.case_id}!`);
+          await refreshData();
+        } else {
+          alert('Failed to parse case: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error connecting to backend server.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Analyze & Load Case</span>`;
+      }
+    }
+
     async function refreshData() {
       try {
         const statusRes = await fetch('/api/status');
@@ -438,6 +623,45 @@
         currentStage = status.current_stage;
         updateActiveStageButton(currentStage);
         document.getElementById('active-stage-label').textContent = status.current_stage_label;
+
+        // Update Header
+        document.getElementById('header-case-id').textContent = status.case_id;
+        document.getElementById('header-case-title').textContent = `State of Telangana v. ${status.accused_name}`;
+
+        // Update Dossier Accused
+        document.getElementById('dossier-accused-name').textContent = `${status.accused_name}`;
+
+        // Update Brief & Vectors
+        const briefRes = await fetch('/api/brief');
+        const brief = await briefRes.json();
+
+        // Update Charges
+        const chargesContainer = document.getElementById('dossier-charges-container');
+        chargesContainer.innerHTML = '';
+        (brief.charges || []).forEach(ch => {
+          const div = document.createElement('div');
+          div.className = 'bg-slate-950/60 border border-slate-800 rounded px-2.5 py-1.5 flex items-center justify-between';
+          div.innerHTML = `<span class="font-medium text-slate-200">${ch}</span>`;
+          chargesContainer.appendChild(div);
+        });
+
+        // Update Strategy Vectors
+        const vectorsContainer = document.getElementById('dossier-vectors-container');
+        vectorsContainer.innerHTML = '';
+        document.getElementById('dossier-vectors-count').textContent = `${(brief.active_vectors || []).length} Detected`;
+        (brief.active_vectors || []).forEach((vec, idx) => {
+          const card = document.createElement('div');
+          card.className = 'border border-slate-800 bg-slate-950/50 rounded-lg p-2.5';
+          const k = vec.details?.knowledge || {};
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-amber-300">${idx+1}. ${k.title || vec.vector.toUpperCase()}</span>
+              <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">${k.statute || 'BNS/BSA'}</span>
+            </div>
+            <p class="text-slate-400 text-[11px] mt-1 leading-snug">${vec.description} (${k.precedent ? `<em class="text-slate-300">${k.precedent}</em>` : ''}).</p>
+          `;
+          vectorsContainer.appendChild(card);
+        });
 
         // Load conversation history
         const histRes = await fetch('/api/history');
@@ -447,6 +671,9 @@
         history.forEach(item => {
           appendMessage(item.speaker, item.message, item.stage);
         });
+
+        // Load guidance
+        await loadCoCounselGuidance();
       } catch (e) {
         console.warn('Could not load initial history from API:', e);
       }
@@ -455,6 +682,7 @@
     // Initialize on load
     window.addEventListener('DOMContentLoaded', () => {
       refreshData();
+      handleRoleChange();
     });
   </script>
 </body>

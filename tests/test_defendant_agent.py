@@ -129,6 +129,36 @@ class TestDefendantAgentSuite(unittest.TestCase):
         self.assertIn("recovery_vulnerabilities", brief)
         self.assertIn("electronic_vulnerabilities", brief)
 
+    def test_07_dynamic_case_ingestion(self):
+        """Verify arbitrary raw text can be ingested dynamically into SQLite."""
+        raw_story = (
+            "Complainant Suresh was robbed near DLF Cybercity road at 11 PM by two motorcycle riders. "
+            "Pillion rider held an iron pipe. Police arrested Salman next day and recovered the stolen watch "
+            "from an open public tea stall. Salman claims he was working at a car garage."
+        )
+        new_case = self.agent.ingest_new_case(raw_story)
+        self.assertIsNotNone(new_case)
+        self.assertEqual(self.agent.case_id, new_case.case_id)
+        # Check that it's persisted in SQLite
+        loaded = self.db.load_case(new_case.case_id)
+        self.assertIsNotNone(loaded)
+        self.assertTrue(len(loaded.witnesses) >= 2)
+
+    def test_08_co_counsel_guidance_and_evaluation(self):
+        """Verify Co-Counsel guidance generation and student defense evaluation."""
+        guidance = self.agent.get_co_counsel_guidance()
+        self.assertIn("objective", guidance)
+        self.assertIn("statutory_grounds", guidance)
+        self.assertIn("precedents", guidance)
+        self.assertIn("suggested_draft", guidance)
+
+        feedback = self.agent.evaluate_student_defense(
+            "May it please your Honour. Under Section 480 BNSS, the accused is entitled to bail as per Satender Kumar Antil."
+        )
+        self.assertIn("statutory", feedback.lower())
+        self.assertIn("precedent", feedback.lower())
+
 
 if __name__ == "__main__":
     unittest.main()
+
